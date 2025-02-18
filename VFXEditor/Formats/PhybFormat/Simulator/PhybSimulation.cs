@@ -23,13 +23,7 @@ namespace VfxEditor.PhybFormat.Simulator {
                 for( var i = 0; i < numSimulators; i++ ) Simulators.Add( new PhybSimulator( file, reader, startPos ) );
             }
 
-            SimulatorDropdown = new(
-                "Simulator",
-                Simulators,
-                null,
-                () => new PhybSimulator( File ),
-                (PhybSimulator _) => _.SaveDialog()
-            );
+            SimulatorDropdown = new( "Simulator", Simulators, null, () => new PhybSimulator( File ) );
         }
 
         public void Write( SimulationWriter writer ) {

@@ -53,14 +53,7 @@ namespace VfxEditor.PhybFormat.Simulator {
             CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
                 ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), ( PhybCollisionData _, bool _ ) => File.OnChange() );
 
-            ChainDropdown = new(
-                "Chain",
-                Chains,
-                null,
-                () => new( File, this ),
-                ( PhybChain _ ) => _.SaveDialog(),
-                ( PhybChain _, bool _ ) => File.OnChange()
-            );
+            ChainDropdown = new( "Chain", Chains, null, () => new( File, this ), ( PhybChain _, bool _ ) => File.OnChange() );
 
             ConnectorSplitView = new( "Connector", Connectors, false,
                 null, () => new( File, this ), ( PhybConnector _, bool _ ) => File.OnChange() );
