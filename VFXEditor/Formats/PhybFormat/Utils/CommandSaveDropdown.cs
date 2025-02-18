@@ -1,9 +1,11 @@
 using System;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
-using Dalamud.Interface;
+using VfxEditor.PhybFormat.Simulator;
+using VfxEditor.PhybFormat.Simulator.Chain;
 using ImGuiNET;
 
 namespace VfxEditor.Ui.Components {
@@ -19,12 +21,7 @@ namespace VfxEditor.Ui.Components {
 
         }
 
-        protected override void DrawControls() {
-            if( NewAction == null ) return;
-            DrawNewDeleteControls( OnNew, OnDelete );
-        }
-
-        protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
+        protected override void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
             if( onNew != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
@@ -33,10 +30,20 @@ namespace VfxEditor.Ui.Components {
 
             using var disabled = ImRaii.Disabled( Selected == null );
 
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            ImGui.SameLine();
-            if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) && Items.Contains( Selected ) ) {
-                Selected.SaveDialog();
+            if( typeof(T) == typeof(PhybSimulator) || typeof(T) == typeof(PhybChain) ) {
+                // coerce selected to export type
+                // TODO add onto IPhysicsObject instead?
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) && Items.Contains( Selected ) ) {
+                    var coerced = Selected as PhybSimulator;
+                    if (coerced != null) {
+                        coerced.SaveDialog();
+                    } else {
+                        var coerced_chain = Selected as PhybChain;
+                        coerced_chain.SaveDialog();
+                    }
+                }
             }
 
             if( onDelete != null ) {
